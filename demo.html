@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Public Demo | GRYSHEN AI</title>
+
+    <link rel="stylesheet" href="static/demo.css">
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+<script src="static/demo.js" defer></script>
+</head>
+
+<body>
+
+<div class="demo-banner">
+    PUBLIC DEMONSTRATION — SYNTHETIC DATA ONLY
+</div>
+
+<header class="topbar">
+    <div class="brand">
+        <span class="brand-icon">⬡</span>
+        <div>
+            <h2>GRYSHEN <span>AI</span></h2>
+            <small>SECURITY OPERATIONS CENTER</small>
+        </div>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="#overview">Overview</a>
+        <a href="#events">Events</a>
+    </nav>
+
+    <div class="demo-status">
+        <span class="pulse"></span> DEMO ONLINE
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="welcome">
+        <div>
+            <p class="eyebrow">PUBLIC DEMONSTRATION / SOC ENVIRONMENT</p>
+            <h1>Security <span>Command Center</span></h1>
+            <p>
+                Explore the GRYSHEN AI interface.
+                All information displayed here is simulated.
+            </p>
+        </div>
+
+        <div class="demo-label">READ-ONLY ACCESS</div>
+    </section>
+
+    <section class="metrics" id="overview">
+
+        <article class="metric">
+            <span>MONITORED WEBSITES</span>
+            <h2>08</h2>
+            <small>Demo environments</small>
+        </article>
+
+        <article class="metric">
+            <span>EVENTS ANALYSED</span>
+            <h2>1,284</h2>
+            <small>Simulated activity</small>
+        </article>
+
+        <article class="metric">
+            <span>ALERTS GENERATED</span>
+            <h2>24</h2>
+            <small>Demo detections</small>
+        </article>
+
+        <article class="metric">
+            <span>SYSTEM STATUS</span>
+            <h2 class="healthy">HEALTHY</h2>
+            <small>Demo environment</small>
+        </article>
+
+    </section>
+<!-- GLOBAL INTELLIGENCE MAP -->
+<section class="section" id="global-map">
+    <div class="section-heading">
+        <div class="eyebrow">GLOBAL VISUALIZATION</div>
+        <h2>Global Intelligence Map</h2>
+        <p>
+            Illustrative geographic markers for demonstration purposes.
+            These are not live threat locations.
+        </p>
+    </div>
+
+    <div id="worldMap"></div>
+
+    <p class="map-disclaimer">
+        DEMONSTRATION DATA · NOT LIVE THREAT INTELLIGENCE
+    </p>
+</section>
+    <section class="panel-grid">
+
+        <article class="panel">
+            <div class="panel-heading">
+                <h3>Activity Overview</h3>
+                <span>SIMULATED DATA</span>
+            </div>
+            <div class="chart-area">
+                <canvas id="activityChart"></canvas>
+            </div>
+        </article>
+
+        <article class="panel">
+            <div class="panel-heading">
+                <h3>Event Classification</h3>
+                <span>DEMO</span>
+            </div>
+
+            <div class="event-stat">
+                <span class="dot purple"></span>
+                Normal activity
+                <strong>72%</strong>
+            </div>
+
+            <div class="event-stat">
+                <span class="dot orange"></span>
+                Suspicious activity
+                <strong>21%</strong>
+            </div>
+
+            <div class="event-stat">
+                <span class="dot red"></span>
+                High-priority alerts
+                <strong>7%</strong>
+            </div>
+        </article>
+
+    </section>
+
+    <section class="panel" id="events">
+        <div class="panel-heading">
+            <h3>Security Event Timeline</h3>
+            <span>GENERATED DEMO EVENTS</span>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>EVENT ID</th>
+                        <th>ACTIVITY</th>
+                        <th>SEVERITY</th>
+                        <th>STATUS</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>DEMO-001</td>
+                        <td>Unusual request frequency</td>
+                        <td><span class="severity medium">MEDIUM</span></td>
+                        <td>Reviewed</td>
+                    </tr>
+
+                    <tr>
+                        <td>DEMO-002</td>
+                        <td>Repeated authentication failures</td>
+                        <td><span class="severity high">HIGH</span></td>
+                        <td>Investigated</td>
+                    </tr>
+
+                    <tr>
+                        <td>DEMO-003</td>
+                        <td>Unexpected endpoint request</td>
+                        <td><span class="severity low">LOW</span></td>
+                        <td>Recorded</td>
+                    </tr>
+
+                    <tr>
+                        <td>DEMO-004</td>
+                        <td>Traffic pattern anomaly</td>
+                        <td><span class="severity medium">MEDIUM</span></td>
+                        <td>Reviewed</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <footer>
+        <h3>GRYSHEN AI</h3>
+        <p>Defensive intelligence. Responsible security.</p>
+        <p class="disclaimer">
+            This is a demonstration environment.
+            No live security monitoring or real visitor data is displayed.
+        </p>
+        <a href="index.html">← Return to public homepage</a>
+    </footer>
+
+</main>
+
+</body>
+</html>

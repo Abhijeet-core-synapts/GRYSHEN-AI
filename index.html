@@ -1,0 +1,1395 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#090711">
+    <meta name="description" content="GRYSHEN AI — a defensive cybersecurity monitoring and threat investigation platform. Explore the architecture, features and interactive demonstration.">
+    <title>GRYSHEN AI | Defensive Intelligence Platform</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #090711;
+            --bg-soft: #100d1b;
+            --panel: rgba(24, 19, 39, .72);
+            --panel-strong: rgba(30, 23, 48, .92);
+            --purple: #9b6cff;
+            --purple-light: #c2a5ff;
+            --purple-dark: #6034b7;
+            --teal: #75d6c4;
+            --text: #f4f0ff;
+            --muted: #a49bb8;
+            --line: rgba(184, 153, 255, .16);
+            --danger: #ff6d8b;
+            --mono: "DM Mono", monospace;
+            --sans: "Inter", sans-serif;
+            --radius: 18px;
+            --glow: 0 0 45px rgba(139, 92, 246, .15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background:
+                radial-gradient(ellipse at 12% 12%, rgba(103, 58, 183, .17), transparent 35%),
+                radial-gradient(ellipse at 85% 38%, rgba(43, 117, 105, .09), transparent 32%),
+                var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            opacity: .17;
+            background-image:
+                linear-gradient(rgba(164, 135, 220, .08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(164, 135, 220, .08) 1px, transparent 1px);
+            background-size: 54px 54px;
+            mask-image: linear-gradient(to bottom, black, transparent 85%);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .container {
+            width: min(1160px, calc(100% - 44px));
+            margin-inline: auto;
+        }
+
+        .mono {
+            font-family: var(--mono);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--purple-light);
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 22px;
+            height: 1px;
+            background: var(--purple);
+        }
+
+        .section {
+            padding: 110px 0;
+        }
+
+        .section-heading {
+            max-width: 680px;
+            margin-bottom: 45px;
+        }
+
+        .section-heading h2 {
+            margin: 16px 0;
+            font-size: clamp(30px, 5vw, 48px);
+            line-height: 1.12;
+            letter-spacing: -2px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            max-width: 590px;
+            font-size: 15px;
+        }
+
+        .gradient-text {
+            color: transparent;
+            background: linear-gradient(100deg, #e5d6ff, #a77aff 55%, #76d7c6);
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+
+        /* Navigation */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(183, 153, 255, .12);
+            background: rgba(9, 7, 17, .78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .nav-inner {
+            min-height: 76px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+        }
+
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(183, 145, 255, .5);
+            border-radius: 12px;
+            color: var(--purple-light);
+            background: linear-gradient(145deg, rgba(151, 103, 255, .25), rgba(31, 23, 49, .8));
+            box-shadow: 0 0 25px rgba(151, 103, 255, .15);
+            font-size: 19px;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: -3px;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 8px;
+            font-weight: 400;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            color: #bcb3ce;
+            font-size: 12px;
+            transition: color .2s ease;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-cta {
+            padding: 10px 17px;
+            border: 1px solid rgba(172, 133, 255, .48);
+            border-radius: 9px;
+            color: white !important;
+            background: rgba(129, 81, 221, .15);
+        }
+
+        .menu-toggle {
+            display: none;
+            border: 1px solid var(--line);
+            border-radius: 9px;
+            padding: 9px 12px;
+            background: var(--panel);
+            color: white;
+            cursor: pointer;
+        }
+
+        /* Hero */
+
+        .hero {
+            position: relative;
+            min-height: 690px;
+            display: flex;
+            align-items: center;
+            padding: 100px 0 90px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            align-items: center;
+            gap: 55px;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 13px;
+            margin-bottom: 26px;
+            border: 1px solid rgba(117, 214, 196, .22);
+            border-radius: 100px;
+            color: #a4e6d8;
+            background: rgba(64, 149, 129, .08);
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 12px var(--teal);
+        }
+
+        .hero h1 {
+            max-width: 720px;
+            font-size: clamp(43px, 6.4vw, 75px);
+            line-height: 1.02;
+            letter-spacing: -4px;
+        }
+
+        .hero-copy {
+            max-width: 550px;
+            margin: 25px 0 32px;
+            color: #aaa1bc;
+            font-size: 15px;
+            line-height: 1.9;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            min-height: 47px;
+            padding: 0 20px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: .25s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            color: white;
+            background: linear-gradient(110deg, #7042c6, #9a69ed);
+            box-shadow: 0 8px 30px rgba(126, 77, 219, .25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(126, 77, 219, .4);
+        }
+
+        .btn-secondary {
+            border-color: rgba(184, 153, 255, .25);
+            color: #e5dcf6;
+            background: rgba(255, 255, 255, .025);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--purple);
+            background: rgba(151, 103, 255, .1);
+        }
+
+        .hero-note {
+            margin-top: 22px;
+            color: #776e88;
+            font-family: var(--mono);
+            font-size: 10px;
+        }
+
+        /* Hero visual */
+
+        .visual-wrap {
+            position: relative;
+            min-height: 430px;
+            display: grid;
+            place-items: center;
+        }
+
+        .orbital {
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            border: 1px solid rgba(171, 135, 255, .18);
+            border-radius: 50%;
+            box-shadow: inset 0 0 55px rgba(128, 78, 221, .07), 0 0 60px rgba(128, 78, 221, .06);
+        }
+
+        .orbital::before,
+        .orbital::after {
+            content: "";
+            position: absolute;
+            inset: 25px;
+            border: 1px dashed rgba(117, 214, 196, .2);
+            border-radius: 50%;
+        }
+
+        .orbital::after {
+            inset: 65px;
+            border-style: solid;
+            border-color: rgba(171, 135, 255, .2);
+        }
+
+        .core {
+            position: relative;
+            z-index: 2;
+            width: 155px;
+            height: 155px;
+            display: grid;
+            place-items: center;
+            border: 1px solid rgba(194, 165, 255, .65);
+            border-radius: 35px;
+            background: linear-gradient(145deg, rgba(126, 78, 219, .4), rgba(20, 15, 34, .95));
+            box-shadow: 0 0 75px rgba(145, 91, 243, .28), inset 0 0 35px rgba(185, 147, 255, .1);
+            transform: rotate(45deg);
+        }
+
+        .core span {
+            transform: rotate(-45deg);
+            font-size: 57px;
+            color: #d7c2ff;
+            text-shadow: 0 0 30px #9b6cff;
+        }
+
+        .float-card {
+            position: absolute;
+            z-index: 3;
+            min-width: 145px;
+            padding: 13px 15px;
+            border: 1px solid rgba(181, 148, 255, .2);
+            border-radius: 12px;
+            background: rgba(20, 16, 32, .82);
+            backdrop-filter: blur(14px);
+            box-shadow: var(--glow);
+        }
+
+        .float-card strong {
+            display: block;
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+
+        .float-card small {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .float-one { top: 38px; right: 0; }
+        .float-two { bottom: 58px; left: -5px; }
+        .float-three { bottom: 5px; right: 25px; }
+
+        .float-indicator {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            margin-right: 6px;
+            border-radius: 50%;
+            background: var(--teal);
+        }
+
+        /* Trust strip */
+
+        .trust-strip {
+            border-block: 1px solid var(--line);
+            background: rgba(255, 255, 255, .018);
+        }
+
+        .trust-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 24px 0;
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            color: #aaa0bc;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        .trust-item span {
+            color: var(--purple-light);
+            margin-right: 8px;
+        }
+
+        /* Feature cards */
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 17px;
+        }
+
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            padding: 27px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: linear-gradient(145deg, rgba(34, 26, 52, .75), rgba(15, 12, 24, .75));
+            transition: .3s ease;
+        }
+
+        .feature-card::after {
+            content: "";
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            right: -65px;
+            bottom: -75px;
+            border-radius: 50%;
+            background: rgba(145, 91, 243, .12);
+            filter: blur(10px);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(169, 128, 255, .5);
+            box-shadow: var(--glow);
+        }
+
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 23px;
+            border: 1px solid rgba(170, 130, 255, .25);
+            border-radius: 13px;
+            color: var(--purple-light);
+            background: rgba(145, 91, 243, .11);
+            font-size: 20px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 9px;
+            font-size: 15px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        /* Architecture */
+
+        .architecture {
+            background: linear-gradient(180deg, transparent, rgba(94, 58, 153, .07), transparent);
+        }
+
+        .architecture-panel {
+            padding: 35px;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: rgba(17, 13, 29, .75);
+            box-shadow: var(--glow);
+        }
+
+        .architecture-flow {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .architecture-node {
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 22px;
+            border: 1px solid rgba(175, 140, 255, .23);
+            border-radius: 15px;
+            background: rgba(120, 76, 190, .08);
+        }
+
+        .architecture-node .node-icon {
+            margin-bottom: 15px;
+            color: var(--purple-light);
+            font-size: 29px;
+        }
+
+        .architecture-node h3 {
+            font-size: 13px;
+        }
+
+        .architecture-node p {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .architecture-caption {
+            margin-top: 25px;
+            color: #827891;
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 10px;
+        }
+
+        /* Demonstration */
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: .85fr 1.15fr;
+            gap: 25px;
+            align-items: stretch;
+        }
+
+        .demo-intro {
+            padding: 15px 0;
+        }
+
+        .demo-intro h2 {
+            margin: 15px 0;
+            font-size: clamp(30px, 4vw, 43px);
+            line-height: 1.15;
+            letter-spacing: -1.8px;
+        }
+
+        .demo-intro p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .demo-window {
+            overflow: hidden;
+            border: 1px solid rgba(176, 143, 255, .25);
+            border-radius: 17px;
+            background: rgba(15, 12, 24, .93);
+            box-shadow: 0 20px 70px rgba(0, 0, 0, .3);
+        }
+
+        .window-top {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--line);
+            color: #b7a9d0;
+            font-family: var(--mono);
+            font-size: 10px;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dots i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #7957a9;
+        }
+
+        .demo-content {
+            padding: 23px;
+        }
+
+        .demo-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 23px;
+        }
+
+        .demo-stat {
+            padding: 14px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .025);
+        }
+
+        .demo-stat strong {
+            display: block;
+            font-family: var(--mono);
+            font-size: 23px;
+        }
+
+        .demo-stat small {
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .event-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 13px 0;
+            border-bottom: 1px solid rgba(184, 153, 255, .09);
+            font-size: 11px;
+        }
+
+        .event-row:last-child {
+            border: 0;
+        }
+
+        .event-row small {
+            display: block;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .severity {
+            align-self: center;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-family: var(--mono);
+            font-size: 8px;
+        }
+
+        .severity.high {
+            color: #ff9bae;
+            background: rgba(255, 109, 139, .12);
+        }
+
+        .severity.medium {
+            color: #e8ca88;
+            background: rgba(232, 202, 136, .1);
+        }
+
+        .severity.low {
+            color: #83d9c8;
+            background: rgba(117, 214, 196, .1);
+        }
+
+        .demo-disclaimer {
+            margin-top: 15px;
+            color: #827891;
+            font-size: 10px;
+        }
+
+        /* Adoption */
+
+        .adoption-card {
+            position: relative;
+            overflow: hidden;
+            padding: 55px;
+            border: 1px solid rgba(173, 137, 255, .28);
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at 90% 10%, rgba(117, 214, 196, .12), transparent 30%),
+                linear-gradient(115deg, rgba(94, 56, 155, .3), rgba(20, 15, 32, .92));
+        }
+
+        .adoption-card h2 {
+            max-width: 650px;
+            margin: 15px 0;
+            font-size: clamp(30px, 4.5vw, 47px);
+            line-height: 1.15;
+            letter-spacing: -1.8px;
+        }
+
+        .adoption-card p {
+            max-width: 590px;
+            margin-bottom: 25px;
+            color: #b3a9c4;
+            font-size: 13px;
+        }
+
+        /* Footer */
+
+        footer {
+            padding: 65px 0 25px;
+            border-top: 1px solid var(--line);
+            background: rgba(5, 4, 10, .45);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 45px;
+            padding-bottom: 45px;
+        }
+
+        .footer-about p {
+            max-width: 340px;
+            margin-top: 17px;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.9;
+        }
+
+        .footer-column h4 {
+            margin-bottom: 17px;
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            color: var(--purple-light);
+        }
+
+        .footer-column a {
+            display: block;
+            margin: 10px 0;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding-top: 20px;
+            border-top: 1px solid var(--line);
+            color: #756d83;
+            font-family: var(--mono);
+            font-size: 9px;
+        }
+
+        /* Motion */
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(22px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 12px rgba(117, 214, 196, .4); }
+            50% { box-shadow: 0 0 23px rgba(117, 214, 196, .9); }
+        }
+
+        .status-dot {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .orbital::before {
+            animation: orbit 35s linear infinite;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 850px) {
+            .hero-grid,
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding-top: 75px;
+            }
+
+            .visual-wrap {
+                min-height: 390px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                width: min(100% - 30px, 1160px);
+            }
+
+            .nav-inner {
+                min-height: 68px;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: 68px;
+                left: 0;
+                right: 0;
+                display: none;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0;
+                padding: 12px 22px 20px;
+                border-bottom: 1px solid var(--line);
+                background: rgba(10, 7, 18, .98);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 12px 0;
+            }
+
+            .nav-cta {
+                text-align: center;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 70px 0 45px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2.5px;
+            }
+
+            .visual-wrap {
+                min-height: 340px;
+                transform: scale(.88);
+            }
+
+            .orbital {
+                width: 290px;
+                height: 290px;
+            }
+
+            .section {
+                padding: 75px 0;
+            }
+
+            .features-grid,
+            .architecture-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .architecture-panel {
+                padding: 17px;
+            }
+
+            .adoption-card {
+                padding: 30px 23px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+
+            .footer-about {
+                grid-column: 1 / -1;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+            }
+        }
+        /* FOUNDER CREDIT */
+
+.founder-credit {
+    text-align: center;
+    padding: 45px 20px;
+    margin-top: 50px;
+    border-top: 1px solid rgba(180, 130, 255, 0.25);
+}
+
+.founder-credit p {
+    color: #aaa;
+    letter-spacing: 2px;
+    font-size: 13px;
+}
+
+.founder-credit h2 {
+    color: #c49aff;
+    letter-spacing: 4px;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.founder-credit span {
+    color: #888;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <div class="container nav-inner">
+            <a href="#home" class="brand">
+                <span class="brand-mark">◈</span>
+                <span>
+                    GRYSHEN
+                    <small>DEFENSIVE INTELLIGENCE</small>
+                </span>
+            </a>
+
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">
+                ☰
+            </button>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#home">Home</a>
+                <a href="#features">Capabilities</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#demo">Live Demo</a>
+                <a href="#adoption" class="nav-cta">Explore Project ↗</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO -->
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+
+                <div class="hero-content">
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        DEFENSIVE SECURITY PROJECT
+                    </div>
+
+                    <div class="eyebrow">THE NEXT LAYER OF DEFENCE</div>
+
+                    <h1>
+                        See threats.<br>
+                        Understand patterns.<br>
+                        <span class="gradient-text">Defend smarter.</span>
+                    </h1>
+
+                    <p class="hero-copy">
+                        Introducing GRYSHEN AI — a cybersecurity
+                        monitoring and investigation platform designed to
+                        help website owners understand suspicious activity,
+                        investigate security events and strengthen their
+                        digital environments.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a href="#demo" class="btn btn-primary">
+                            Explore the Demo <span>↗</span>
+                        </a>
+                        <a href="#architecture" class="btn btn-secondary">
+                            Discover the Architecture
+                        </a>
+                    </div>
+
+                    <p class="hero-note">
+                        // BUILT AROUND VISIBILITY · INVESTIGATION · DEFENCE
+                    </p>
+                </div>
+
+                <div class="visual-wrap" aria-label="Abstract cybersecurity visual">
+                    <div class="orbital"></div>
+
+                    <div class="core">
+                        <span>◈</span>
+                    </div>
+
+                    <div class="float-card float-one">
+                        <strong><span class="float-indicator"></span> DEFENCE ENGINE</strong>
+                        <small>Local demo interface</small>
+                    </div>
+
+                    <div class="float-card float-two">
+                        <strong>THREAT ANALYSIS</strong>
+                        <small>Pattern investigation</small>
+                    </div>
+
+                    <div class="float-card float-three">
+                        <strong>EVENT LOGS</strong>
+                        <small>Evidence visibility</small>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TRUST STRIP -->
+        <div class="trust-strip">
+            <div class="container trust-inner">
+                <div class="trust-item"><span>◆</span> DEFENSIVE-FIRST DESIGN</div>
+                <div class="trust-item"><span>◆</span> PRIVACY CONSCIOUS</div>
+                <div class="trust-item"><span>◆</span> MODULAR ARCHITECTURE</div>
+                <div class="trust-item"><span>◆</span> INVESTIGATION READY</div>
+            </div>
+        </div>
+
+        <!-- FEATURES -->
+        <section class="section" id="features">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <div class="eyebrow">PLATFORM CAPABILITIES</div>
+                    <h2>One platform.<br><span class="gradient-text">Multiple layers of visibility.</span></h2>
+                    <p>
+                        A planned collection of defensive tools for monitoring,
+                        investigation and security awareness. Each capability
+                        is designed to work within authorised environments.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">◉</div>
+                        <h3>Security Monitoring</h3>
+                        <p>Review application activity, service health and security events from a central interface.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">⌁</div>
+                        <h3>Threat Intelligence</h3>
+                        <p>Explore trusted public threat indicators and use them as investigation leads, not automatic proof.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">⌕</div>
+                        <h3>Event Investigation</h3>
+                        <p>Search and review recorded events with timestamps, classifications and detection context.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">⬡</div>
+                        <h3>Digital Evidence</h3>
+                        <p>Explore evidence records, integrity hashes and structured investigation reports.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">▦</div>
+                        <h3>Multi-Site Vision</h3>
+                        <p>A planned architecture for authorised owners to monitor multiple registered websites independently.</p>
+                    </article>
+
+                    <article class="feature-card reveal">
+                        <div class="feature-icon">⛨</div>
+                        <h3>Defensive Response</h3>
+                        <p>Designed around safe controls such as access restrictions, rate limits and administrator alerts.</p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ARCHITECTURE -->
+        <section class="section architecture" id="architecture">
+            <div class="container">
+
+                <div class="section-heading reveal">
+                    <div class="eyebrow">SYSTEM ARCHITECTURE</div>
+                    <h2>Built with <span class="gradient-text">separation in mind.</span></h2>
+                    <p>
+                        The long-term platform design separates public information,
+                        authenticated customer monitoring and isolated research
+                        environments.
+                    </p>
+                </div>
+
+                <div class="architecture-panel reveal">
+                    <div class="architecture-flow">
+
+                        <div class="architecture-node">
+                            <div class="node-icon">◎</div>
+                            <h3>PUBLIC PROJECT WEBSITE</h3>
+                            <p>Project information, documentation and demonstrations.</p>
+                        </div>
+
+                        <div class="architecture-node">
+                            <div class="node-icon">◈</div>
+                            <h3>CUSTOMER SECURITY PLATFORM</h3>
+                            <p>Authenticated monitoring for registered website owners.</p>
+                        </div>
+
+                        <div class="architecture-node">
+                            <div class="node-icon">⬡</div>
+                            <h3>ISOLATED RESEARCH LAB</h3>
+                            <p>Restricted experiments using synthetic data and isolated services.</p>
+                        </div>
+
+                    </div>
+
+                    <p class="architecture-caption">
+                        CONCEPTUAL ARCHITECTURE · COMPONENTS ARE UNDER DEVELOPMENT
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- DEMO -->
+        <section class="section" id="demo">
+            <div class="container demo-grid">
+
+                <div class="demo-intro reveal">
+                    <div class="eyebrow">INTERACTIVE PREVIEW</div>
+                    <h2>Security data.<br><span class="gradient-text">Made understandable.</span></h2>
+                    <p>
+                        Explore the visual style of the investigation console.
+                        The sample events below are synthetic demonstrations,
+                        not live threat detections.
+                    </p>
+
+                    <div style="margin-top:25px; display:flex; gap:12px; flex-wrap:wrap">
+    <a href="#adoption" class="btn btn-primary">
+        Explore the Project ↗
+    </a>
+
+    <a href="demo.html" class="btn btn-secondary">
+        Explore Interactive Demo ↗
+    </a>
+</div>
+                </div>
+
+                <div class="demo-window reveal">
+                    <div class="window-top">
+                        <span>SSAI / EVENT OVERVIEW</span>
+                        <span class="window-dots"><i></i><i></i><i></i></span>
+                    </div>
+
+                    <div class="demo-content">
+
+                        <div class="demo-stats">
+                            <div class="demo-stat">
+                                <strong>05</strong>
+                                <small>DEMO EVENTS</small>
+                            </div>
+                            <div class="demo-stat">
+                                <strong>02</strong>
+                                <small>HIGH PRIORITY</small>
+                            </div>
+                            <div class="demo-stat">
+                                <strong>01</strong>
+                                <small>NORMAL</small>
+                            </div>
+                        </div>
+
+                        <div class="event-row">
+                            <div>
+                                <strong>Repeated request simulation</strong>
+                                <small>DEMO-CLIENT-001</small>
+                            </div>
+                            <span class="severity high">HIGH</span>
+                        </div>
+
+                        <div class="event-row">
+                            <div>
+                                <strong>Restricted route simulation</strong>
+                                <small>DEMO-CLIENT-002</small>
+                            </div>
+                            <span class="severity high">HIGH</span>
+                        </div>
+
+                        <div class="event-row">
+                            <div>
+                                <strong>Suspicious request pattern</strong>
+                                <small>DEMO-CLIENT-003</small>
+                            </div>
+                            <span class="severity medium">MEDIUM</span>
+                        </div>
+
+                        <div class="event-row">
+                            <div>
+                                <strong>Application health event</strong>
+                                <small>LOCAL-DEMO-APP</small>
+                            </div>
+                            <span class="severity medium">MEDIUM</span>
+                        </div>
+
+                        <div class="event-row">
+                            <div>
+                                <strong>Normal activity</strong>
+                                <small>DEMO-CLIENT-004</small>
+                            </div>
+                            <span class="severity low">LOW</span>
+                        </div>
+
+                        <p class="demo-disclaimer">
+                            SIMULATED DATA ONLY · NOT CONNECTED TO LIVE WEBSITES
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ADOPTION -->
+        <section class="section" id="adoption">
+            <div class="container">
+                <div class="adoption-card reveal">
+                    <div class="eyebrow">THE PROJECT JOURNEY</div>
+
+                    <h2>
+                        A more informed approach to
+                        <span class="gradient-text">digital defence.</span>
+                    </h2>
+
+                    <p>
+                        GRYSHEN AI is being developed as an educational
+                        and defensive cybersecurity project. Documentation,
+                        integration guidance and a public demonstration will
+                        help visitors understand its design as the platform grows.
+                    </p>
+
+                    <a href="#features" class="btn btn-primary">
+                        Discover the Capabilities ↗
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div class="footer-about">
+                    <a href="#home" class="brand">
+                        <span class="brand-mark">◈</span>
+                        <span>
+                            GRYSHEN
+                            <small>DEFENSIVE INTELLIGENCE</small>
+                        </span>
+                    </a>
+
+                    <p>
+                        A developing cybersecurity platform focused on
+                        defensive monitoring, threat investigation and
+                        responsible security research.
+                    </p>
+                </div>
+
+                <div class="footer-column">
+                    <h4>EXPLORE</h4>
+                    <a href="#features">Capabilities</a>
+                    <a href="#architecture">Architecture</a>
+                    <a href="#demo">Demonstration</a>
+                    <a href="#adoption">Project Journey</a>
+                </div>
+
+                <div class="footer-column">
+                    <h4>PRINCIPLES</h4>
+                    <a href="#architecture">Defensive Security</a>
+                    <a href="#features">Privacy Awareness</a>
+                    <a href="#demo">Synthetic Demonstrations</a>
+                    <a href="#home">Responsible Research</a>
+                </div>
+
+            </div>
+
+            <div class="footer-bottom">
+                <span>© <span id="year"></span> GRYSHEN AI</span>
+                <span>BUILT FOR VISIBILITY. DESIGNED FOR DEFENCE.</span>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        // Mobile navigation
+        const menuToggle = document.getElementById("menuToggle");
+        const navLinks = document.getElementById("navLinks");
+
+        menuToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.textContent = isOpen ? "✕" : "☰";
+        });
+
+        // Close menu after selecting a link
+        navLinks.querySelectorAll("a").forEach(link => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                menuToggle.setAttribute("aria-expanded", "false");
+                menuToggle.textContent = "☰";
+            });
+        });
+
+        // Reveal sections while scrolling
+        const revealElements = document.querySelectorAll(".reveal");
+
+        if ("IntersectionObserver" in window) {
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            revealElements.forEach(element => observer.observe(element));
+        } else {
+            revealElements.forEach(element => element.classList.add("visible"));
+        }
+
+        // Current year
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+<footer class="founder-credit">
+    <p>FOUNDED & DEVELOPED BY</p>
+    <h2>ABHIJEET KORI</h2>
+    <span>CREATOR • FOUNDER • DEVELOPER</span>
+</footer>
+
+
+</body>
+</html>
